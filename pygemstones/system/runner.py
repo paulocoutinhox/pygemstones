@@ -55,7 +55,9 @@ def run_external(
         result = command(command_params)
 
         if show_log:
-            log.d('Command "{0}" finished with success'.format(command_name))
+            log.colored(
+                'Command "{0}" finished with success'.format(command_name), log.GREEN
+            )
     except Exception as e:
         if show_error_log:
             log.e(
@@ -104,7 +106,7 @@ def run(args, cwd=None):
         if not isinstance(args, str):
             args = " ".join(args)
 
-        log.d(
+        log.m(
             "{2}COMMAND:{3} {0}\n"
             "{4}WORKING DIR:{5} {1}".format(
                 args, cwd, log.YELLOW, log.ENDC, log.YELLOW, log.ENDC
@@ -134,7 +136,7 @@ def run_as_shell(args, cwd=None):
         if not isinstance(args, str):
             args = " ".join(args)
 
-        log.d(
+        log.m(
             "{2}COMMAND:{3} {0}\n"
             "{4}WORKING DIR:{5} {1}".format(
                 args, cwd, log.YELLOW, log.ENDC, log.YELLOW, log.ENDC
