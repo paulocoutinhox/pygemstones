@@ -5,7 +5,7 @@
     <br>
 </p>
 
-<h1 align="center">Python Gems</h1>
+<h1 align="center">Python Gemstones</h1>
 
 <p align="center">
   <a href="https://github.com/paulo-coutinho/pygemstones/actions"><img src="https://github.com/paulo-coutinho/pygemstones/actions/workflows/build.yml/badge.svg" alt="Build Status"></a>
