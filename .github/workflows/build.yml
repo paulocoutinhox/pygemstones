@@ -1,0 +1,63 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }} - Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { name: "Linux", os: ubuntu-latest }
+          - { name: "Windows", os: windows-latest }
+          - { name: "macOS", os: macos-latest }
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upgrade PIP
+        run: python -m pip install --upgrade pip setuptools wheel
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Display Python version
+        run: python --version
+
+      - name: Display PIP version
+        run: pip --version
+
+      - name: Display Poetry version
+        run: poetry --version
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Linters
+        run: |
+          poetry run black --check pygemstones/
+          poetry run black --check tests/
+          poetry run mypy --ignore-missing-imports pygemstones/
+          poetry run mypy --ignore-missing-imports tests/
+
+      - name: Test
+        run: |
+          poetry run pytest --cov=pygemstones --cov-report=html tests
+          poetry run coverage xml
+
+      - name: Upload coverage data
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
+          verbose: true
+          fail_ci_if_error: true

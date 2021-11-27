@@ -1,0 +1,34 @@
+[tool.poetry]
+description = "Python package that group a lot of classes and functions that help software development."
+name = "pygemstones"
+version = "0.0.1"
+
+authors = ["Paulo Coutinho <paulo@prsolucoes.com>"]
+license = "MIT"
+maintainers = []
+readme = "README.md"
+
+documentation = "https://github.com/paulo-coutinho/pygemstones"
+homepage = "https://github.com/paulo-coutinho/pygemstones"
+repository = "https://github.com/paulo-coutinho/pygemstones"
+
+keywords = []
+
+classifiers = ["Topic :: Software Development :: Libraries :: Python Modules"]
+
+[tool.poetry.dependencies]
+python = "^3.6.2"
+colorama = "^0.4.4"
+boto3 = "^1.20.10"
+
+[tool.poetry.dev-dependencies]
+black = "^21.11b0"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+isort = "^5.10.1"
+mypy = "^0.910"
+moto = "^2.2.15"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry_core>=1.0.0"]

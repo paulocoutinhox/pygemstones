@@ -1,0 +1,77 @@
+on:
+  push:
+    tags:
+      - "v*" # push events to matching v*, i.e. v1.0, v1.2.3
+
+name: Release
+
+jobs:
+  autorelease:
+    name: Release
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.10"
+
+      - name: Upgrade PIP
+        run: python -m pip install --upgrade pip setuptools wheel
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Display Python version
+        run: python --version
+
+      - name: Display PIP version
+        run: pip --version
+
+      - name: Display Poetry version
+        run: poetry --version
+
+      - name: Add version to environment vars
+        run: |
+          PROJECT_VERSION=$(poetry version --short)
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+
+      - name: Check if tag version matches project version
+        run: |
+          TAG=$(git describe HEAD --tags --abbrev=0)
+          echo $TAG
+          echo $PROJECT_VERSION
+          if [[ "$TAG" != "v$PROJECT_VERSION" ]]; then exit 1; fi
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Linters
+        run: |
+          poetry run black --check pygemstones/
+          poetry run black --check tests/
+          poetry run mypy --ignore-missing-imports pygemstones/
+          poetry run mypy --ignore-missing-imports tests/
+
+      - name: Test
+        run: |
+          poetry run pytest --cov=pygemstones --cov-report=html tests
+          poetry run coverage xml
+
+      - name: Build
+        run: poetry build
+
+      - name: Create release draft
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: ".github/RELEASE-TEMPLATE.md"
+          draft: true
+          files: |
+            dist/pygemstones-${{env.PROJECT_VERSION}}-py3-none-any.whl
+            dist/pygemstones-${{env.PROJECT_VERSION}}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
