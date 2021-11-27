@@ -712,3 +712,33 @@ def test_get_file_line_numbers_with_enclosing_tags_with_error(tmp_path):
     )
 
     assert line_numbers == None
+
+
+# -----------------------------------------------------------------------------
+def test_get_file_line_numbers_with_enclosing_tags_with_more_end_than_start_tags(
+    tmp_path,
+):
+    target_path = os.path.join(tmp_path, "new-dir")
+    file_path = os.path.join(target_path, "file1.txt")
+
+    contents = """{
+        my_first_function() {
+            }
+            }
+            }
+        }
+    }
+
+    my_second_function() {
+        my_other_second_sub_function() {
+
+        }
+    }
+    """
+
+    f.set_file_content(file_path, contents)
+
+    line_numbers = f.get_file_line_numbers_with_enclosing_tags(file_path, "{", "}")
+
+    assert line_numbers[0] == 1
+    assert line_numbers[1] == 4
