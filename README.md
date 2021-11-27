@@ -31,7 +31,19 @@ poetry install
 
 ### How To Use
 
-Before call any pygemstones module, import system boostrap and call `init` method:
+To use in your project, install `pygemstones` module:
+
+```
+pip install pygemstones
+```
+
+or:
+
+```
+poetry add pygemstones
+```
+
+And before call any pygemstones module, import system boostrap and call `init` method:
 
 ```python
 from pygemstones.system import bootstrap
