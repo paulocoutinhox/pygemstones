@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/paulo-coutinho/pygemstones" target="_blank" rel="noopener noreferrer">
-        <img width="120" src="extras/images/logo.png#20211127031900" alt="PyGemstones Logo">
+        <img width="120" src="extras/images/logo.png" alt="PyGemstones Logo">
     </a>
     <br>
 </p>
