@@ -21,13 +21,6 @@ Python package that group a lot of classes and functions that help software deve
 ### Requirements
 
 * Python 3.6+
-* Poetry (https://python-poetry.org/)
-
-### Install
-
-```
-poetry install
-```
 
 ### How To Use
 
@@ -65,6 +58,25 @@ There are several implemented modules for you to use:
 - type.string
 - util.log
 - vendor.aws
+
+### Development
+
+These are the requirements for local development:
+
+* Python 3.6+
+* Poetry (https://python-poetry.org/)
+
+You can install locally:
+
+```
+poetry install
+```
+
+Or can build and generate a package:
+
+```
+poetry build
+```
 
 ### Tests
 
