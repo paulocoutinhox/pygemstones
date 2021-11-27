@@ -50,6 +50,22 @@ from pygemstones.system import bootstrap
 bootstrap.init()
 ```
 
+### Modules
+
+There are several implemented modules for you to use:
+
+- io.file
+- io.net
+- io.pack
+- system.bootstrap
+- system.platform
+- system.runner
+- system.settings
+- type.list
+- type.string
+- util.log
+- vendor.aws
+
 ### Tests
 
 ```
