@@ -111,7 +111,7 @@ To build the package use:
 poetry build
 ```
 
-Get the token from your PyPI account with:
+Set the token from your PyPI account with:
 
 ```
 poetry config pypi-token.pypi [PyPI-Api-Access-Token]
