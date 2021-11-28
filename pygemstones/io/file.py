@@ -505,9 +505,6 @@ def replace_in_file(file, old_string, new_string):
     with open(file) as f:
         s = f.read()
 
-        if old_string not in s:
-            return
-
     with open(file, "w") as f:
         s = s.replace(old_string, new_string)
         f.write(s)
@@ -670,10 +667,12 @@ def get_file_line_number_with_content(file, content, strip=False, match=False):
             if match:
                 if fnmatch.fnmatch(line, content):
                     result = line_number + 1
+                    break
 
             else:
                 if line == content:
                     result = line_number + 1
+                    break
 
         f.close()
 
