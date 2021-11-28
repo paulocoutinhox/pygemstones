@@ -426,7 +426,7 @@ def copy_dir(src, dst, symlinks=False, ignore=None, ignore_file=None):
 
 
 # -----------------------------------------------------------------------------
-def file_has_content(file, content):
+def file_has_content(file, content, encoding="utf-8"):
     """
     Check and return if a file has a content inside.
 
@@ -439,7 +439,7 @@ def file_has_content(file, content):
         bool
     """
 
-    with open(file) as f:
+    with open(file, encoding=encoding) as f:
         if content in f.read():
             return True
 
@@ -487,7 +487,7 @@ def append_to_file(file, content):
 
 
 # -----------------------------------------------------------------------------
-def replace_in_file(file, old_string, new_string):
+def replace_in_file(file, old_string, new_string, encoding="utf-8"):
     """
     Replace an old string by a new string inside a file.
 
@@ -502,21 +502,21 @@ def replace_in_file(file, old_string, new_string):
         None
     """
 
-    with open(file) as f:
+    with open(file, encoding=encoding) as f:
         s = f.read()
 
-    with open(file, "w") as f:
+    with open(file, "w", encoding=encoding) as f:
         s = s.replace(old_string, new_string)
         f.write(s)
         f.close()
 
 
 # -----------------------------------------------------------------------------
-def replace_line_in_file(file, line, content, new_line=False):
+def set_file_line_content(file, line, content, new_line=False, encoding="utf-8"):
     """
     Replace a line content inside a file by it number.
 
-    A new line can be added at line end by new_line parameter.
+    A break line can be added at the end using new_line parameter.
 
     Arguments:
         file : str
@@ -531,18 +531,18 @@ def replace_line_in_file(file, line, content, new_line=False):
         None
     """
 
-    with open(file) as f:
+    with open(file, encoding=encoding) as f:
         lines = f.readlines()
         lines[line - 1] = content + ("\n" if new_line else "")
         f.close()
 
-        with open(file, "w") as f:
+        with open(file, "w", encoding=encoding) as f:
             f.writelines(lines)
             f.close()
 
 
 # -----------------------------------------------------------------------------
-def get_file_line_contents(file, line):
+def get_file_line_contents(file, line, encoding="utf-8"):
     """
     Get file line contents by it number.
 
@@ -555,7 +555,7 @@ def get_file_line_contents(file, line):
         str
     """
 
-    with open(file) as f:
+    with open(file, encoding=encoding) as f:
         lines = f.readlines()
         contents = lines[line - 1]
         f.close()
@@ -592,7 +592,7 @@ def file_line_has_content(file, line, content, strip=False):
 
 
 # -----------------------------------------------------------------------------
-def file_line_prepend(file, line, content):
+def prepend_to_file_line(file, line, content):
     """
     Add a content before a line content from file by it number.
 
@@ -608,11 +608,11 @@ def file_line_prepend(file, line, content):
     """
 
     line_contents = get_file_line_contents(file, line)
-    replace_line_in_file(file, line, content + line_contents)
+    set_file_line_content(file, line, content + line_contents)
 
 
 # -----------------------------------------------------------------------------
-def file_line_prepend_range(file, line_start, line_end, content):
+def prepend_to_file_line_range(file, line_start, line_end, content):
     """
     Add a content before a line content from a range of line numbers.
 
@@ -630,11 +630,13 @@ def file_line_prepend_range(file, line_start, line_end, content):
     """
 
     for x in range(line_start, line_end + 1):
-        file_line_prepend(file, x, content)
+        prepend_to_file_line(file, x, content)
 
 
 # -----------------------------------------------------------------------------
-def get_file_line_number_with_content(file, content, strip=False, match=False):
+def get_file_line_number_with_content(
+    file, content, strip=False, match=False, encoding="utf-8"
+):
     """
     Get a file line number that has a content.
 
@@ -655,7 +657,7 @@ def get_file_line_number_with_content(file, content, strip=False, match=False):
         int
     """
 
-    with open(file) as f:
+    with open(file, encoding=encoding) as f:
         lines = f.readlines()
 
         result = None
@@ -680,7 +682,9 @@ def get_file_line_number_with_content(file, content, strip=False, match=False):
 
 
 # -----------------------------------------------------------------------------
-def get_file_line_numbers_with_enclosing_tags(file, start_tag, end_tag, start_from=1):
+def get_file_line_numbers_with_enclosing_tags(
+    file, start_tag, end_tag, start_from=1, encoding="utf-8"
+):
     """
     Get file line numbers that has start enclosing tag and end enclosing tags.
 
@@ -699,7 +703,7 @@ def get_file_line_numbers_with_enclosing_tags(file, start_tag, end_tag, start_fr
         list[int]
     """
 
-    with open(file) as f:
+    with open(file, encoding=encoding) as f:
         lines = f.readlines()
 
         result = None

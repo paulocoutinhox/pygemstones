@@ -270,12 +270,12 @@ def test_replace_in_file(tmp_path):
 
 
 # -----------------------------------------------------------------------------
-def test_replace_line_in_file(tmp_path):
+def test_set_file_line_content(tmp_path):
     target_path = os.path.join(tmp_path, "new-dir")
     file_path = os.path.join(target_path, "file1.txt")
 
     f.set_file_content(file_path, "line 1\nline 2\nline 3")
-    f.replace_line_in_file(file_path, 2, "line x\n")
+    f.set_file_line_content(file_path, 2, "line x\n")
 
     contents = f.get_file_line_contents(file_path, 2)
     assert contents.strip() == "line x"
@@ -293,15 +293,15 @@ def test_file_line_has_content(tmp_path):
 
 
 # -----------------------------------------------------------------------------
-def test_file_line_prepend(tmp_path):
+def test_prepend_to_file_line(tmp_path):
     target_path = os.path.join(tmp_path, "new-dir")
     file_path = os.path.join(target_path, "file1.txt")
 
     f.set_file_content(file_path, "line 1\nline 2\nline 3\nline 4\nline 5")
 
-    f.file_line_prepend(file_path, 2, "//")
-    f.file_line_prepend(file_path, 3, "//")
-    f.file_line_prepend(file_path, 4, "//")
+    f.prepend_to_file_line(file_path, 2, "//")
+    f.prepend_to_file_line(file_path, 3, "//")
+    f.prepend_to_file_line(file_path, 4, "//")
 
     assert f.file_line_has_content(file_path, 1, "line 1", strip=True)
     assert f.file_line_has_content(file_path, 2, "//line 2", strip=True)
@@ -311,13 +311,13 @@ def test_file_line_prepend(tmp_path):
 
 
 # -----------------------------------------------------------------------------
-def test_file_line_prepend_range(tmp_path):
+def test_prepend_to_file_line_range(tmp_path):
     target_path = os.path.join(tmp_path, "new-dir")
     file_path = os.path.join(target_path, "file1.txt")
 
     f.set_file_content(file_path, "line 1\nline 2\nline 3\nline 4\nline 5")
 
-    f.file_line_prepend_range(file_path, 2, 4, "//")
+    f.prepend_to_file_line_range(file_path, 2, 4, "//")
 
     assert f.file_line_has_content(file_path, 1, "line 1", strip=True)
     assert f.file_line_has_content(file_path, 2, "//line 2", strip=True)
