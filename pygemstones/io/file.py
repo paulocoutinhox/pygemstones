@@ -94,7 +94,7 @@ def find_files(path, pattern, recursive=False):
     Arguments:
         path : str
 
-        pattern : str
+        pattern : str | list[str]
 
         recursive : bool
 
@@ -110,7 +110,14 @@ def find_files(path, pattern, recursive=False):
                 base_path = os.path.join(root, name)
                 filename = os.path.basename(base_path)
 
-                if pattern == "*" or fnmatch.fnmatch(filename, pattern):
+                if isinstance(pattern, list):
+                    if [
+                        pattern_item
+                        for pattern_item in pattern
+                        if fnmatch.fnmatch(filename, pattern_item)
+                    ]:
+                        results.append(base_path)
+                elif pattern == "*" or fnmatch.fnmatch(filename, pattern):
                     results.append(base_path)
     else:
         for item in os.listdir(path):
@@ -119,7 +126,14 @@ def find_files(path, pattern, recursive=False):
             if os.path.isfile(base_path):
                 filename = os.path.basename(base_path)
 
-                if pattern == "*" or fnmatch.fnmatch(filename, pattern):
+                if isinstance(pattern, list):
+                    if [
+                        pattern_item
+                        for pattern_item in pattern
+                        if fnmatch.fnmatch(filename, pattern_item)
+                    ]:
+                        results.append(base_path)
+                elif pattern == "*" or fnmatch.fnmatch(filename, pattern):
                     results.append(base_path)
 
     return results
@@ -135,7 +149,7 @@ def find_dirs(path, pattern, recursive=False):
     Arguments:
         path : str
 
-        pattern : str
+        pattern : str | list[str]
 
         recursive : bool
 
@@ -151,14 +165,28 @@ def find_dirs(path, pattern, recursive=False):
                 base_path = os.path.join(root, name)
                 dirname = os.path.basename(base_path)
 
-                if pattern == "*" or fnmatch.fnmatch(dirname, pattern):
+                if isinstance(pattern, list):
+                    if [
+                        pattern_item
+                        for pattern_item in pattern
+                        if fnmatch.fnmatch(dirname, pattern_item)
+                    ]:
+                        results.append(base_path)
+                elif pattern == "*" or fnmatch.fnmatch(dirname, pattern):
                     results.append(base_path)
     else:
         for item in os.listdir(path):
             base_path = os.path.join(path, item)
 
             if os.path.isdir(base_path):
-                if pattern == "*" or fnmatch.fnmatch(item, pattern):
+                if isinstance(pattern, list):
+                    if [
+                        pattern_item
+                        for pattern_item in pattern
+                        if fnmatch.fnmatch(item, pattern_item)
+                    ]:
+                        results.append(base_path)
+                elif pattern == "*" or fnmatch.fnmatch(item, pattern):
                     results.append(base_path)
 
     return results

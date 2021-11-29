@@ -116,6 +116,21 @@ def test_find_files(tmp_path):
 
 
 # -----------------------------------------------------------------------------
+def test_find_files_as_list(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.set_file_content(os.path.join(target_path, "file1_1.f1"), "test")
+    f.set_file_content(os.path.join(target_path, "file1_2.f1"), "test")
+    f.set_file_content(os.path.join(target_path, "file3_3.f1"), "test")
+    f.set_file_content(os.path.join(target_path, "file2_1.f2"), "test")
+    f.set_file_content(os.path.join(target_path, "file2_2.f2"), "test")
+    f.set_file_content(os.path.join(target_path, "file3_1.f3"), "test")
+
+    files = f.find_files(target_path, ["*.f2", "*.f3"])
+    assert len(files) == 3
+
+
+# -----------------------------------------------------------------------------
 def test_find_files_recursive(tmp_path):
     target_path = os.path.join(tmp_path, "new-dir")
 
@@ -124,6 +139,21 @@ def test_find_files_recursive(tmp_path):
 
     files = f.find_files(target_path, "*.txt", recursive=True)
     assert len(files) == 2
+
+
+# -----------------------------------------------------------------------------
+def test_find_files_recursive_as_list(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.set_file_content(os.path.join(target_path, "A", "file1_1.f1"), "test")
+    f.set_file_content(os.path.join(target_path, "A", "file1_2.f1"), "test")
+    f.set_file_content(os.path.join(target_path, "A", "file1_3.f1"), "test")
+    f.set_file_content(os.path.join(target_path, "B", "file2_1.f2"), "test")
+    f.set_file_content(os.path.join(target_path, "B", "file2_2.f2"), "test")
+    f.set_file_content(os.path.join(target_path, "C", "file3_1.f3"), "test")
+
+    files = f.find_files(target_path, ["*.f2", "*.f3"], recursive=True)
+    assert len(files) == 3
 
 
 # -----------------------------------------------------------------------------
@@ -142,6 +172,24 @@ def test_find_dirs(tmp_path):
 
 
 # -----------------------------------------------------------------------------
+def test_find_dirs_as_list(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.create_dir(os.path.join(target_path, "abc1"))
+    f.create_dir(os.path.join(target_path, "abc2"))
+    f.create_dir(os.path.join(target_path, "xyz1"))
+    f.create_dir(os.path.join(target_path, "xyz2"))
+    f.create_dir(os.path.join(target_path, "jkl1"))
+    f.create_dir(os.path.join(target_path, "wer1"))
+
+    dir_list = f.find_dirs(target_path, ["*abc*", "jkl*"])
+    assert len(dir_list) == 3
+
+    dir_list = f.find_dirs(target_path, "xyz*")
+    assert len(dir_list) == 2
+
+
+# -----------------------------------------------------------------------------
 def test_find_dirs_recursive(tmp_path):
     target_path = os.path.join(tmp_path, "new-dir")
 
@@ -151,6 +199,24 @@ def test_find_dirs_recursive(tmp_path):
 
     dir_list = f.find_dirs(target_path, "new-dir*", recursive=True)
     assert len(dir_list) == 3
+
+
+# -----------------------------------------------------------------------------
+def test_find_dirs_recursive_as_list(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.create_dir(os.path.join(target_path, "A", "new-dir-a-1"))
+    f.create_dir(os.path.join(target_path, "A", "new-dir-a-2"))
+    f.create_dir(os.path.join(target_path, "A", "new-dir-a-3"))
+    f.create_dir(os.path.join(target_path, "B", "new-dir-b-1"))
+    f.create_dir(os.path.join(target_path, "B", "new-dir-b-2"))
+    f.create_dir(os.path.join(target_path, "C", "new-dir-c-1"))
+
+    dir_list = f.find_dirs(target_path, ["new-dir-b*", "new-dir-c*"], recursive=True)
+    assert len(dir_list) == 3
+
+    dir_list = f.find_dirs(target_path, ["new*", "*xyz*"], recursive=True)
+    assert len(dir_list) == 6
 
 
 # -----------------------------------------------------------------------------
