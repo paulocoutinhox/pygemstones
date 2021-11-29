@@ -39,49 +39,103 @@ def remove_file(path):
 
 
 # -----------------------------------------------------------------------------
-def remove_files(path, pattern):
+def remove_files(path, pattern, recursive=False):
     """
     Remove files with pattern with all errors and exceptions ignored.
 
+    The search algorithm can find files recursively if enabled by the parameter.
+
     Arguments:
         path : str
 
-        pattern : str
+        pattern : str | list[str]
+
+        recursive : bool
 
     Returns:
         None
     """
 
-    for root, _, files in os.walk(path, topdown=False):
-        for name in files:
-            base_path = os.path.join(root, name)
-            filename = os.path.basename(base_path)
+    if recursive:
+        for root, _, files in os.walk(path, topdown=False):
+            for name in files:
+                base_path = os.path.join(root, name)
+                filename = os.path.basename(base_path)
 
-            if fnmatch.fnmatch(filename, pattern):
-                os.remove(base_path)
+                if isinstance(pattern, list):
+                    if [
+                        pattern_item
+                        for pattern_item in pattern
+                        if fnmatch.fnmatch(filename, pattern_item)
+                    ]:
+                        os.remove(base_path)
+                elif pattern == "*" or fnmatch.fnmatch(filename, pattern):
+                    os.remove(base_path)
+    else:
+        for item in os.listdir(path):
+            base_path = os.path.join(path, item)
+
+            if os.path.isfile(base_path):
+                filename = os.path.basename(base_path)
+
+                if isinstance(pattern, list):
+                    if [
+                        pattern_item
+                        for pattern_item in pattern
+                        if fnmatch.fnmatch(filename, pattern_item)
+                    ]:
+                        os.remove(base_path)
+                elif pattern == "*" or fnmatch.fnmatch(filename, pattern):
+                    os.remove(base_path)
 
 
 # -----------------------------------------------------------------------------
-def remove_dirs(path, pattern):
+def remove_dirs(path, pattern, recursive=False):
     """
     Remove directories with pattern with all errors and exceptions ignored.
+
+    The search algorithm can find directories recursively if enabled by the parameter.
 
     Arguments:
         path : str
 
-        pattern : str
+        pattern : str | list[str]
+
+        recursive : bool
 
     Returns:
         None
     """
 
-    for root, dirs, _ in os.walk(path, topdown=False):
-        for name in dirs:
-            base_path = os.path.join(root, name)
-            dirname = os.path.basename(base_path)
+    if recursive:
+        for root, dirs, _ in os.walk(path, topdown=False):
+            for name in dirs:
+                base_path = os.path.join(root, name)
+                dirname = os.path.basename(base_path)
 
-            if fnmatch.fnmatch(dirname, pattern):
-                remove_dir(base_path)
+                if isinstance(pattern, list):
+                    if [
+                        pattern_item
+                        for pattern_item in pattern
+                        if fnmatch.fnmatch(dirname, pattern_item)
+                    ]:
+                        remove_dir(base_path)
+                elif pattern == "*" or fnmatch.fnmatch(dirname, pattern):
+                    remove_dir(base_path)
+    else:
+        for item in os.listdir(path):
+            base_path = os.path.join(path, item)
+
+            if os.path.isdir(base_path):
+                if isinstance(pattern, list):
+                    if [
+                        pattern_item
+                        for pattern_item in pattern
+                        if fnmatch.fnmatch(item, pattern_item)
+                    ]:
+                        remove_dir(base_path)
+                elif pattern == "*" or fnmatch.fnmatch(item, pattern):
+                    remove_dir(base_path)
 
 
 # -----------------------------------------------------------------------------
@@ -305,6 +359,53 @@ def copy_file(from_path, to_path):
 
     create_dir(os.path.dirname(to_path))
     shutil.copyfile(from_path, to_path)
+
+
+# -----------------------------------------------------------------------------
+def copy_files(source_path, target_path, pattern, symlinks=True):
+    """
+    Copy files inside source path to target path which match the pattern, creating the target directory if not exists.
+
+    Symbolic links can be copied too.
+
+    Arguments:
+        source_path : str
+
+        target_path : str
+
+        pattern : str | list[str]
+
+        symlinks : bool
+
+    Returns:
+        None
+    """
+
+    for item in os.listdir(source_path):
+        base_path = os.path.join(source_path, item)
+
+        if os.path.isfile(base_path):
+            filename = os.path.basename(base_path)
+
+            if isinstance(pattern, list):
+                if [
+                    pattern_item
+                    for pattern_item in pattern
+                    if fnmatch.fnmatch(filename, pattern_item)
+                ]:
+                    create_dir(target_path)
+                    shutil.copyfile(
+                        base_path,
+                        os.path.join(target_path, filename),
+                        follow_symlinks=symlinks,
+                    )
+            elif pattern == "*" or fnmatch.fnmatch(filename, pattern):
+                create_dir(target_path)
+                shutil.copyfile(
+                    base_path,
+                    os.path.join(target_path, filename),
+                    follow_symlinks=symlinks,
+                )
 
 
 # -----------------------------------------------------------------------------
@@ -707,6 +808,54 @@ def get_file_line_number_with_content(
         f.close()
 
         return result
+
+
+# -----------------------------------------------------------------------------
+def get_file_line_numbers_with_content(
+    file, content, strip=False, match=False, encoding="utf-8"
+):
+    """
+    Get a list of file line numbers that has a content.
+
+    The lines can be stripped before check using strip parameter.
+
+    The fnmatch function can be used to check using match parameter.
+
+    Arguments:
+        file : str
+
+        content : str
+
+        strip : bool
+
+        match: bool
+
+    Returns:
+        list[int]
+    """
+
+    with open(file, encoding=encoding) as f:
+        lines = f.readlines()
+
+        result = []
+
+        for line_number, line in enumerate(lines):
+            if strip:
+                line = line.strip()
+
+            if match:
+                if fnmatch.fnmatch(line, content):
+                    result.append(line_number + 1)
+            else:
+                if line == content:
+                    result.append(line_number + 1)
+
+        f.close()
+
+        if len(result) > 0:
+            return result
+        else:
+            return None
 
 
 # -----------------------------------------------------------------------------

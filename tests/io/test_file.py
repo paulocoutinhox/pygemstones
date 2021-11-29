@@ -105,6 +105,54 @@ def test_remove_files(tmp_path):
 
 
 # -----------------------------------------------------------------------------
+def test_remove_files_with_pattern_list(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.set_file_content(os.path.join(target_path, "file1.txt"), "test")
+    f.set_file_content(os.path.join(target_path, "file2.txt"), "test")
+    f.set_file_content(os.path.join(target_path, "other_file.txt"), "test")
+
+    files = f.find_files(target_path, "*.txt")
+    assert len(files) == 3
+
+    f.remove_files(target_path, ["file*.txt", "file2.txt"])
+    files = f.find_files(target_path, "*.txt")
+    assert len(files) == 1
+
+
+# -----------------------------------------------------------------------------
+def test_remove_files_recursive(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.set_file_content(os.path.join(target_path, "A", "file1.txt"), "test")
+    f.set_file_content(os.path.join(target_path, "B", "file2.txt"), "test")
+    f.set_file_content(os.path.join(target_path, "C", "file3.txt"), "test")
+
+    files = f.find_files(target_path, "file*.txt", recursive=True)
+    assert len(files) == 3
+
+    f.remove_files(target_path, "file*.txt", recursive=True)
+    files = f.find_files(target_path, "*.txt", recursive=True)
+    assert len(files) == 0
+
+
+# -----------------------------------------------------------------------------
+def test_remove_files_recursive_with_pattern_list(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.set_file_content(os.path.join(target_path, "A", "file1.txt"), "test")
+    f.set_file_content(os.path.join(target_path, "B", "file2.txt"), "test")
+    f.set_file_content(os.path.join(target_path, "C", "other_file.txt"), "test")
+
+    files = f.find_files(target_path, "*.txt", recursive=True)
+    assert len(files) == 3
+
+    f.remove_files(target_path, ["file*.txt", "file2.txt"], recursive=True)
+    files = f.find_files(target_path, "*.txt", recursive=True)
+    assert len(files) == 1
+
+
+# -----------------------------------------------------------------------------
 def test_find_files(tmp_path):
     target_path = os.path.join(tmp_path, "new-dir")
 
@@ -237,6 +285,57 @@ def test_remove_dirs(tmp_path):
 
 
 # -----------------------------------------------------------------------------
+def test_remove_dirs_with_pattern_list(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.create_dir(os.path.join(target_path, "new-dir-1"))
+    f.create_dir(os.path.join(target_path, "new-dir-2"))
+    f.create_dir(os.path.join(target_path, "new-dir-3"))
+
+    dir_list = f.find_dirs(target_path, "*dir*")
+    assert len(dir_list) == 3
+
+    f.remove_dirs(target_path, ["*dir-1*", "*dir-2*"])
+
+    dir_list = f.find_dirs(target_path, "*dir*")
+    assert len(dir_list) == 1
+
+
+# -----------------------------------------------------------------------------
+def test_remove_dirs_recursive(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.create_dir(os.path.join(target_path, "A", "abc-dir-1"))
+    f.create_dir(os.path.join(target_path, "B", "efg-dir-2"))
+    f.create_dir(os.path.join(target_path, "C", "abc-dir-3"))
+
+    dir_list = f.find_dirs(target_path, "*dir*", recursive=True)
+    assert len(dir_list) == 3
+
+    f.remove_dirs(target_path, "*abc-dir*", recursive=True)
+
+    dir_list = f.find_dirs(target_path, "*dir*", recursive=True)
+    assert len(dir_list) == 1
+
+
+# -----------------------------------------------------------------------------
+def test_remove_dirs_recursive_with_pattern_list(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+
+    f.create_dir(os.path.join(target_path, "A", "abc-dir-1"))
+    f.create_dir(os.path.join(target_path, "B", "efg-dir-2"))
+    f.create_dir(os.path.join(target_path, "C", "abc-dir-3"))
+
+    dir_list = f.find_dirs(target_path, "*dir*", recursive=True)
+    assert len(dir_list) == 3
+
+    f.remove_dirs(target_path, ["*abc-dir-*"], recursive=True)
+
+    dir_list = f.find_dirs(target_path, "*dir*", recursive=True)
+    assert len(dir_list) == 1
+
+
+# -----------------------------------------------------------------------------
 def test_current_dir():
     cur_dir = f.current_dir()
     assert len(cur_dir) > 0
@@ -286,6 +385,52 @@ def test_copy_file(tmp_path):
 
     f.copy_file(file_path, dst_path)
     assert f.file_exists(dst_path)
+
+
+# -----------------------------------------------------------------------------
+def test_copy_files(tmp_path):
+    source_path = os.path.join(tmp_path, "source-dir")
+    target_path = os.path.join(tmp_path, "target-dir")
+
+    f.set_file_content(os.path.join(source_path, "file1_1.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file1_2.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file3_3.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file2_1.f2"), "test")
+    f.set_file_content(os.path.join(source_path, "file2_2.f2"), "test")
+    f.set_file_content(os.path.join(source_path, "file3_1.f3"), "test")
+    os.symlink(
+        os.path.join(source_path, "file2_1.f2"),
+        os.path.join(source_path, "file2_symbolic.f2"),
+    )
+
+    f.copy_files(source_path, target_path, "*.f2")
+
+    file_list = f.find_files(target_path, "*")
+
+    assert len(file_list) == 3
+
+
+# -----------------------------------------------------------------------------
+def test_copy_files_with_pattern_list(tmp_path):
+    source_path = os.path.join(tmp_path, "source-dir")
+    target_path = os.path.join(tmp_path, "target-dir")
+
+    f.set_file_content(os.path.join(source_path, "file1_1.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file1_2.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file3_3.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file2_1.f2"), "test")
+    f.set_file_content(os.path.join(source_path, "file2_2.f2"), "test")
+    f.set_file_content(os.path.join(source_path, "file3_1.f3"), "test")
+    os.symlink(
+        os.path.join(source_path, "file2_1.f2"),
+        os.path.join(source_path, "file2_symbolic.f2"),
+    )
+
+    f.copy_files(source_path, target_path, ["*.f2", "*.f3"])
+
+    file_list = f.find_files(target_path, "*")
+
+    assert len(file_list) == 4
 
 
 # -----------------------------------------------------------------------------
@@ -589,6 +734,80 @@ def test_get_file_line_number_with_content_with_strip_and_match(tmp_path):
     )
 
     assert line_number == 3
+
+
+# -----------------------------------------------------------------------------
+def test_get_file_line_numbers_with_content(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+    file_path = os.path.join(target_path, "file1.txt")
+
+    f.set_file_content(
+        file_path, "line 1\nline 2\nline 3\nline 1\nline 4\nline 5\nline 1\n"
+    )
+
+    line_numbers = f.get_file_line_numbers_with_content(file_path, "line 1\n")
+
+    assert len(line_numbers) == 3
+
+
+# -----------------------------------------------------------------------------
+def test_get_file_line_numbers_with_content_with_strip(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+    file_path = os.path.join(target_path, "file1.txt")
+
+    f.set_file_content(
+        file_path, "line 1\nline 2\nline 3\nline 1\nline 4\nline 5\nline 1\n"
+    )
+
+    line_numbers = f.get_file_line_numbers_with_content(file_path, "line 1", strip=True)
+
+    assert len(line_numbers) == 3
+
+
+# -----------------------------------------------------------------------------
+def test_get_file_line_numbers_with_content_with_match(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+    file_path = os.path.join(target_path, "file1.txt")
+
+    f.set_file_content(
+        file_path, "line 1\nline 2\nline 3\nline 1\nline 4\nline 5\nline 1\n"
+    )
+
+    line_numbers = f.get_file_line_numbers_with_content(
+        file_path, "line 1*", match=True
+    )
+
+    assert len(line_numbers) == 3
+
+
+# -----------------------------------------------------------------------------
+def test_get_file_line_numbers_with_content_with_strip_and_match(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+    file_path = os.path.join(target_path, "file1.txt")
+
+    f.set_file_content(
+        file_path, "line 1\nline 2\nline 3\nline 1\nline 4\nline 5\nline 1\n"
+    )
+
+    line_numbers = f.get_file_line_numbers_with_content(
+        file_path, "line 1", strip=True, match=True
+    )
+
+    assert len(line_numbers) == 3
+
+
+# -----------------------------------------------------------------------------
+def test_get_file_line_numbers_with_content_not_found(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+    file_path = os.path.join(target_path, "file1.txt")
+
+    f.set_file_content(
+        file_path, "line 1\nline 2\nline 3\nline 1\nline 4\nline 5\nline 1\n"
+    )
+
+    line_numbers = f.get_file_line_numbers_with_content(file_path, "line 5")
+
+    assert line_numbers == None
 
 
 # -----------------------------------------------------------------------------
