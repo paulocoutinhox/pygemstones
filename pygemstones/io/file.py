@@ -2,6 +2,7 @@ import fnmatch
 import os
 import shutil
 import stat
+from distutils.dir_util import copy_tree
 
 
 # -----------------------------------------------------------------------------
@@ -406,6 +407,24 @@ def copy_files(source_path, target_path, pattern, symlinks=True):
                     os.path.join(target_path, filename),
                     follow_symlinks=symlinks,
                 )
+
+
+# -----------------------------------------------------------------------------
+def copy_all(src_path, dst_path):
+    """
+    Copy all files and directories inside source path to target path, creating the target directory if not exists.
+
+    Arguments:
+        source_path : str
+
+        target_path : str
+
+    Returns:
+        None
+    """
+
+    create_dir(dst_path)
+    copy_tree(src_path, dst_path, update=1)
 
 
 # -----------------------------------------------------------------------------
