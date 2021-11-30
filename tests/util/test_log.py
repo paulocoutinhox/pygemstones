@@ -58,9 +58,36 @@ def test_failed(capsys):
 
 
 # -----------------------------------------------------------------------------
-def test_colored(capsys):
-    message = "colored test"
+def test_with_foreground_colored(capsys):
+    message = "foreground colored test"
+    l.colored(message, l.BLACK)
+    l.colored(message, l.RED)
+    l.colored(message, l.GREEN)
+    l.colored(message, l.YELLOW)
+    l.colored(message, l.BLUE)
+    l.colored(message, l.MAGENTA)
+    l.colored(message, l.CYAN)
+    l.colored(message, l.WHITE)
     l.colored(message, l.PURPLE)
+    l.colored(message, l.LIGHT_PURPLE)
+    l.colored(message, l.GRAY)
+    l.colored(message, l.LIGHT_GRAY)
+
+    captured = capsys.readouterr()
+    assert message in captured.out
+
+
+# -----------------------------------------------------------------------------
+def test_with_background_colored(capsys):
+    message = "background colored test"
+    l.m(l.CYAN + l.BG_BLACK + message + l.RESET)
+    l.m(l.YELLOW + l.BG_RED + message + l.RESET)
+    l.m(l.WHITE + l.BG_GREEN + message + l.RESET)
+    l.m(l.BLACK + l.BG_YELLOW + message + l.RESET)
+    l.m(l.RED + l.BG_BLUE + message + l.RESET)
+    l.m(l.BLUE + l.BG_MAGENTA + message + l.RESET)
+    l.m(l.WHITE + l.BG_CYAN + message + l.RESET)
+    l.m(l.BLACK + l.BG_WHITE + message + l.RESET)
 
     captured = capsys.readouterr()
     assert message in captured.out

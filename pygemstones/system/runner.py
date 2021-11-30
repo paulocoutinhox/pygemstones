@@ -109,7 +109,7 @@ def run(args, cwd=None):
         log.m(
             "{2}COMMAND:{3} {0}\n"
             "{4}WORKING DIR:{5} {1}".format(
-                args, cwd, log.YELLOW, log.ENDC, log.YELLOW, log.ENDC
+                args, cwd, log.YELLOW, log.RESET, log.YELLOW, log.RESET
             )
         )
 
@@ -139,7 +139,7 @@ def run_as_shell(args, cwd=None):
         log.m(
             "{2}COMMAND:{3} {0}\n"
             "{4}WORKING DIR:{5} {1}".format(
-                args, cwd, log.YELLOW, log.ENDC, log.YELLOW, log.ENDC
+                args, cwd, log.YELLOW, log.RESET, log.YELLOW, log.RESET
             )
         )
 
