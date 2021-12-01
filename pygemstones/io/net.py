@@ -56,7 +56,7 @@ def download(url, dst_file):
             download_hook(block_count, block_sz, file_size)
             sys.stdout.flush()
 
-        l.d("")
+        l.m("")
 
 
 # -----------------------------------------------------------------------------
