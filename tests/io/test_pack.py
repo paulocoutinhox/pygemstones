@@ -28,7 +28,7 @@ def test_unpack_zip(tmp_path):
 
 
 # -----------------------------------------------------------------------------
-def test_unpack_tar_gz(tmp_path):
+def test_unpack_tgz(tmp_path):
     pack_path = os.path.join(tmp_path, "pack")
     unpack_path = os.path.join(tmp_path, "unpack")
     f.create_dir(pack_path)
@@ -37,6 +37,27 @@ def test_unpack_tar_gz(tmp_path):
     f.set_file_content(os.path.join(pack_path, "file2.py"), "")
 
     pack_file_path = os.path.join(tmp_path, "file.tgz")
+
+    p.tar_dir(pack_file_path, pack_path)
+    assert f.file_exists(pack_file_path)
+
+    p.unpack(pack_file_path, unpack_path)
+    assert f.dir_exists(unpack_path)
+
+    files_unpacked = f.find_files(os.path.join(unpack_path, "pack"), "*.*")
+    assert len(files_unpacked) == 2
+
+
+# -----------------------------------------------------------------------------
+def test_unpack_tar_gz(tmp_path):
+    pack_path = os.path.join(tmp_path, "pack")
+    unpack_path = os.path.join(tmp_path, "unpack")
+    f.create_dir(pack_path)
+
+    f.set_file_content(os.path.join(pack_path, "file1.py"), "")
+    f.set_file_content(os.path.join(pack_path, "file2.py"), "")
+
+    pack_file_path = os.path.join(tmp_path, "file.tar.gz")
 
     p.tar_dir(pack_file_path, pack_path)
     assert f.file_exists(pack_file_path)
@@ -65,7 +86,7 @@ def test_unpack_unknown_format(tmp_path):
     with pytest.raises(Exception) as info:
         p.unpack(pack_file_path, unpack_path)
 
-    assert info.value.args[0] == "File format not supported"
+    assert info.value.args[0] == "File format not supported: .abc"
 
 
 # -----------------------------------------------------------------------------

@@ -27,12 +27,20 @@ def unpack(src_path, dst_path):
         with zipfile.ZipFile(src_path, "r") as archive:
             archive.extractall(dst_path)
             archive.close()
-    elif file_extension in [".tgz", ".bz2", ".tar.gz", ".tbz2", ".tar.bz2", ".tar"]:
+    elif file_extension in [
+        ".tgz",
+        ".bz2",
+        ".tar.gz",
+        ".tbz2",
+        ".tar.bz2",
+        ".tar",
+        ".gz",
+    ]:
         with tarfile.open(src_path, "r:*") as archive:
             archive.extractall(dst_path)
             archive.close()
     else:
-        raise Exception("File format not supported")
+        raise Exception("File format not supported: {0}".format(file_extension))
 
 
 # -----------------------------------------------------------------------------
