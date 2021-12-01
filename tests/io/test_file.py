@@ -394,7 +394,7 @@ def test_copy_files(tmp_path):
 
     f.set_file_content(os.path.join(source_path, "file1_1.f1"), "test")
     f.set_file_content(os.path.join(source_path, "file1_2.f1"), "test")
-    f.set_file_content(os.path.join(source_path, "file3_3.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file1_3.f1"), "test")
     f.set_file_content(os.path.join(source_path, "file2_1.f2"), "test")
     f.set_file_content(os.path.join(source_path, "file2_2.f2"), "test")
     f.set_file_content(os.path.join(source_path, "file3_1.f3"), "test")
@@ -417,7 +417,7 @@ def test_copy_files_with_pattern_list(tmp_path):
 
     f.set_file_content(os.path.join(source_path, "file1_1.f1"), "test")
     f.set_file_content(os.path.join(source_path, "file1_2.f1"), "test")
-    f.set_file_content(os.path.join(source_path, "file3_3.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file1_3.f1"), "test")
     f.set_file_content(os.path.join(source_path, "file2_1.f2"), "test")
     f.set_file_content(os.path.join(source_path, "file2_2.f2"), "test")
     f.set_file_content(os.path.join(source_path, "file3_1.f3"), "test")
@@ -431,6 +431,37 @@ def test_copy_files_with_pattern_list(tmp_path):
     file_list = f.find_files(target_path, "*")
 
     assert len(file_list) == 4
+
+
+# -----------------------------------------------------------------------------
+def test_copy_all(tmp_path):
+    source_path = os.path.join(tmp_path, "source-dir")
+    target_path = os.path.join(tmp_path, "target-dir")
+
+    f.set_file_content(os.path.join(source_path, "file1_1.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file1_2.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "file1_3.f1"), "test")
+    f.set_file_content(os.path.join(source_path, "B", "file2_1.f2"), "test")
+    f.set_file_content(os.path.join(source_path, "B", "file2_2.f2"), "test")
+    f.set_file_content(os.path.join(source_path, "C", "C" "file3_1.f3"), "test")
+    os.symlink(
+        os.path.join(source_path, "B", "file2_1.f2"),
+        os.path.join(source_path, "B", "file2_symbolic.f2"),
+    )
+
+    f.copy_all(source_path, target_path)
+
+    assert f.file_exists(os.path.join(source_path, "file1_1.f1"))
+    assert f.file_exists(os.path.join(source_path, "file1_2.f1"))
+    assert f.file_exists(os.path.join(source_path, "file1_3.f1"))
+    assert f.file_exists(os.path.join(source_path, "B", "file2_1.f2"))
+    assert f.file_exists(os.path.join(source_path, "B", "file2_2.f2"))
+    assert f.file_exists(os.path.join(source_path, "C", "C" "file3_1.f3"))
+    assert f.file_exists(os.path.join(source_path, "B", "file2_symbolic.f2"))
+
+    file_list = f.find_files(target_path, "*", recursive=True)
+
+    assert len(file_list) == 7
 
 
 # -----------------------------------------------------------------------------
