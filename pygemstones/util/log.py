@@ -99,7 +99,7 @@ def i(msg):
         None
     """
 
-    print("{0}[INFO]{1} {2}".format(BLUE, RESET, msg))
+    print("{0}[INFO]{1} {2}".format(CYAN, RESET, msg))
 
 
 # -----------------------------------------------------------------------------

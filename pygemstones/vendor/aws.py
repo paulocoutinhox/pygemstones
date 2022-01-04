@@ -151,7 +151,15 @@ def s3_delete_key(s3, bucket, key):
     """
 
     try:
-        s3.delete_objects(Bucket=bucket, Delete={"Objects": [{"Key": key}]})
+        page = s3.get_paginator("list_objects")
+
+        operation_parameters = {"Bucket": bucket, "Prefix": key}
+
+        for page in page.paginate(**operation_parameters):
+            keys = [{"Key": obj["Key"]} for obj in page.get("Contents", [])]
+
+            if keys:
+                s3.delete_objects(Bucket=bucket, Delete={"Objects": keys})
     except Exception as e:
         l.e('Failed to delete key "{0}" from AWS S3: {1}'.format(key, e))
 
@@ -175,7 +183,15 @@ def s3_delete_path(s3, bucket, key):
     """
 
     try:
-        s3.delete_objects(Bucket=bucket, Delete={"Objects": [{"Key": (key + "/")}]})
+        page = s3.get_paginator("list_objects")
+
+        operation_parameters = {"Bucket": bucket, "Prefix": key + "/"}
+
+        for page in page.paginate(**operation_parameters):
+            keys = [{"Key": obj["Key"]} for obj in page.get("Contents", [])]
+
+            if keys:
+                s3.delete_objects(Bucket=bucket, Delete={"Objects": keys})
     except Exception as e:
         l.e('Failed to delete path "{0}" from AWS S3: {1}'.format(key, e))
 
