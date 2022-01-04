@@ -82,6 +82,25 @@ def s3_upload(
 
 
 # -----------------------------------------------------------------------------
+def s3_create_key(s3, bucket, key):
+    """
+    Create a key in AWS S3 bucket.
+
+    Arguments:
+        s3 : boto3.session.Session.client
+
+        bucket : str
+
+        key: str
+    """
+
+    try:
+        s3.put_object(Bucket=bucket, Key=key)
+    except Exception as e:
+        l.e('Failed to create key "{0}" on AWS S3: {1}'.format(key, e))
+
+
+# -----------------------------------------------------------------------------
 def s3_key_exists(s3, bucket, key):
     """
     Check and return if AWS S3 key existing in a bucket.
@@ -111,30 +130,6 @@ def s3_key_exists(s3, bucket, key):
 
 
 # -----------------------------------------------------------------------------
-def s3_create_path(s3, bucket, key):
-    """
-    Create a path in AWS S3 bucket.
-
-    Arguments:
-        s3 : boto3.session.Session.client
-
-        bucket : str
-
-        key: str
-
-    Returns:
-        bool
-    """
-
-    try:
-        s3.put_object(Bucket=bucket, Key=(key + "/"))
-    except Exception as e:
-        l.e('Failed to create path "{0}" on AWS S3: {1}'.format(key, e))
-
-    return True
-
-
-# -----------------------------------------------------------------------------
 def s3_delete_key(s3, bucket, key):
     """
     Delete a key from AWS S3 bucket.
@@ -145,9 +140,6 @@ def s3_delete_key(s3, bucket, key):
         bucket : str
 
         key: str
-
-    Returns:
-        bool
     """
 
     try:
@@ -163,7 +155,21 @@ def s3_delete_key(s3, bucket, key):
     except Exception as e:
         l.e('Failed to delete key "{0}" from AWS S3: {1}'.format(key, e))
 
-    return True
+
+# -----------------------------------------------------------------------------
+def s3_create_path(s3, bucket, key):
+    """
+    Create a path in AWS S3 bucket.
+
+    Arguments:
+        s3 : boto3.session.Session.client
+
+        bucket : str
+
+        key: str
+    """
+
+    s3_create_key(s3, bucket, (key + "/"))
 
 
 # -----------------------------------------------------------------------------
@@ -182,20 +188,7 @@ def s3_delete_path(s3, bucket, key):
         bool
     """
 
-    try:
-        page = s3.get_paginator("list_objects")
-
-        operation_parameters = {"Bucket": bucket, "Prefix": key + "/"}
-
-        for page in page.paginate(**operation_parameters):
-            keys = [{"Key": obj["Key"]} for obj in page.get("Contents", [])]
-
-            if keys:
-                s3.delete_objects(Bucket=bucket, Delete={"Objects": keys})
-    except Exception as e:
-        l.e('Failed to delete path "{0}" from AWS S3: {1}'.format(key, e))
-
-    return True
+    s3_delete_key(s3, bucket, (key + "/"))
 
 
 # -----------------------------------------------------------------------------
@@ -214,15 +207,7 @@ def s3_path_exists(s3, bucket, key):
         bool
     """
 
-    try:
-        s3.head_object(Bucket=bucket, Key=key + "/")
-    except ClientError as e:
-        error_code = int(e.response["Error"]["Code"])
-
-        if error_code >= 400 and error_code <= 499:
-            return False
-
-    return True
+    return s3_key_exists(s3, bucket, (key + "/"))
 
 
 # -----------------------------------------------------------------------------

@@ -26,6 +26,75 @@ def s3(aws_credentials):
 
 # -----------------------------------------------------------------------------
 @mock_s3
+def test_create_key(s3):
+    bucket_name = "my-bucket"
+    key_name = "path1/path2"
+
+    s3.create_bucket(Bucket=bucket_name)
+
+    exists = a.s3_key_exists(s3, bucket_name, key_name)
+    assert exists == False
+
+    a.s3_create_key(s3, bucket_name, key_name)
+
+    exists = a.s3_key_exists(s3, bucket_name, key_name)
+    assert exists
+
+
+# -----------------------------------------------------------------------------
+@mock_s3
+def test_create_key_invalid_bucket(s3):
+    bucket_name = "my-bucket"
+    key_name = "path1/path2"
+
+    s3.create_bucket(Bucket=bucket_name)
+
+    exists = a.s3_key_exists(s3, bucket_name, key_name)
+    assert exists == False
+
+    with pytest.raises(SystemExit) as info:
+        a.s3_create_key(s3, "invalid-bucket", key_name)
+
+        assert info.value.args[0] == 10
+        assert "bucket does not exist" in info.value.args[1]
+
+
+# -----------------------------------------------------------------------------
+@mock_s3
+def test_delete_key(s3):
+    bucket_name = "my-bucket"
+    key_name = "path1/path2"
+
+    s3.create_bucket(Bucket=bucket_name)
+    s3.put_object(Bucket=bucket_name, Key=key_name, Body=b"test")
+
+    exists = a.s3_key_exists(s3, bucket_name, key_name)
+    assert exists
+
+    a.s3_delete_key(s3, bucket_name, key_name)
+
+    exists = a.s3_key_exists(s3, bucket_name, key_name)
+    assert exists == False
+
+
+# -----------------------------------------------------------------------------
+@mock_s3
+def test_delete_key_invalid_bucket(s3):
+    bucket_name = "my-bucket"
+    key_name = "path1/path2"
+
+    s3.create_bucket(Bucket=bucket_name)
+    s3.put_object(Bucket=bucket_name, Key=key_name, Body=b"test")
+
+    with pytest.raises(SystemExit) as info:
+        a.s3_delete_key(s3, "invalid-bucket", key_name)
+
+        assert info.value.args[0] == 10
+        assert "bucket does not exist" in info.value.args[1]
+
+
+# -----------------------------------------------------------------------------
+@mock_s3
 def test_key_exists(s3):
     bukcet_name = "my-bucket"
 
@@ -59,6 +128,24 @@ def test_create_path(s3):
 
 # -----------------------------------------------------------------------------
 @mock_s3
+def test_create_path_invalid_bucket(s3):
+    bucket_name = "my-bucket"
+    key_name = "path1/path2"
+
+    s3.create_bucket(Bucket=bucket_name)
+
+    exists = a.s3_key_exists(s3, bucket_name, key_name)
+    assert exists == False
+
+    with pytest.raises(SystemExit) as info:
+        a.s3_create_path(s3, "invalid-bucket", key_name)
+
+        assert info.value.args[0] == 10
+        assert "bucket does not exist" in info.value.args[1]
+
+
+# -----------------------------------------------------------------------------
+@mock_s3
 def test_delete_path(s3):
     bucket_name = "my-bucket"
     key_name = "path1/path2"
@@ -77,20 +164,34 @@ def test_delete_path(s3):
 
 # -----------------------------------------------------------------------------
 @mock_s3
-def test_delete_key(s3):
+def test_delete_path_invalid_bucket(s3):
     bucket_name = "my-bucket"
     key_name = "path1/path2"
 
     s3.create_bucket(Bucket=bucket_name)
     s3.put_object(Bucket=bucket_name, Key=key_name, Body=b"test")
 
-    exists = a.s3_key_exists(s3, bucket_name, key_name)
-    assert exists
+    with pytest.raises(SystemExit) as info:
+        a.s3_delete_path(s3, "invalid-bucket", key_name)
 
-    a.s3_delete_key(s3, bucket_name, key_name)
+        assert info.value.args[0] == 10
+        assert "bucket does not exist" in info.value.args[1]
 
-    exists = a.s3_key_exists(s3, bucket_name, key_name)
+
+# -----------------------------------------------------------------------------
+@mock_s3
+def test_path_exists(s3):
+    bukcet_name = "my-bucket"
+
+    s3.create_bucket(Bucket=bukcet_name)
+
+    exists = a.s3_path_exists(s3, bukcet_name, "path1/path2")
     assert exists == False
+
+    s3.put_object(Bucket=bukcet_name, Key="path1/path2/")
+
+    exists = a.s3_path_exists(s3, bukcet_name, "path1/path2")
+    assert exists
 
 
 # -----------------------------------------------------------------------------

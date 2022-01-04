@@ -539,6 +539,8 @@ def copy_dir(src, dst, symlinks=False, ignore=None, ignore_file=None):
         if os.path.isdir(s):
             copy_dir(s, d, symlinks, ignore, ignore_file)
         else:
+            can_copy = True
+
             if os.path.islink(s):
                 if symlinks:
                     if ignore_file is None:
@@ -552,27 +554,25 @@ def copy_dir(src, dst, symlinks=False, ignore=None, ignore_file=None):
 
                         os.symlink(os.readlink(s), d)
 
-                        try:
+                        if hasattr(os, "lchmod"):
                             st = os.lstat(s)
                             mode = stat.S_IMODE(st.st_mode)
                             os.lchmod(d, mode)
-                        except:
-                            # lchmod not available
-                            pass
                 else:
-                    continue
+                    # ignore this symlink
+                    can_copy = False
 
-            if ignore_file is None:
-                ignored_file = False
-            else:
-                ignored_file = ignore_file(s)
+            if can_copy:
+                if ignore_file is None:
+                    ignored_file = False
+                else:
+                    ignored_file = ignore_file(s)
 
-            if not ignored_file:
-                try:
-                    shutil.copy2(s, d)
-                except:
-                    # ignore some errors
-                    pass
+                if not ignored_file:
+                    try:
+                        shutil.copy2(s, d)
+                    except IOError:
+                        pass
 
 
 # -----------------------------------------------------------------------------
