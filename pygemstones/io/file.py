@@ -426,7 +426,7 @@ def copy_all(src_path, dst_path):
     """
 
     create_dir(dst_path)
-    copy_tree(src_path, dst_path, update=1)
+    copy_tree(src_path, dst_path, update=1, preserve_symlinks=True)
 
 
 # -----------------------------------------------------------------------------
