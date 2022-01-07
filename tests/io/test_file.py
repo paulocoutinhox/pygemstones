@@ -607,6 +607,34 @@ def test_copy_dir_with_symbolic_links(tmp_path):
 
 
 # -----------------------------------------------------------------------------
+def test_copy_dir_with_symbolic_links_as_directory(tmp_path):
+    target_path = os.path.join(tmp_path, "new-dir")
+    dst_path = os.path.join(tmp_path, "dst-dir")
+
+    f.set_file_content(os.path.join(target_path, "file1.txt"), "test")
+    f.set_file_content(os.path.join(target_path, "file2.txt"), "test")
+    f.create_dir(os.path.join(target_path, "my-folder"))
+    os.symlink(
+        os.path.join(target_path, "my-folder"),
+        os.path.join(target_path, "my-symbolic-folder"),
+    )
+
+    f.copy_dir(target_path, dst_path, symlinks=True)
+
+    path_is_link = os.path.islink(os.path.join(dst_path, "my-symbolic-folder"))
+    path_is_dir = os.path.isdir(os.path.join(dst_path, "my-symbolic-folder"))
+
+    assert path_is_link
+    assert path_is_dir
+
+    path_is_link = os.path.islink(os.path.join(dst_path, "my-folder"))
+    path_is_dir = os.path.isdir(os.path.join(dst_path, "my-folder"))
+
+    assert path_is_dir
+    assert path_is_link == False
+
+
+# -----------------------------------------------------------------------------
 def test_copy_dir_with_ignore_and_symbolic_links(tmp_path):
     target_path = os.path.join(tmp_path, "new-dir")
     dst_path = os.path.join(tmp_path, "dst-dir")
