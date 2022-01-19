@@ -966,7 +966,7 @@ def symlink(source_path, target_path, recreate=False, target_is_directory=False)
     try:
         if os.path.islink(target_path):
             if recreate:
-                os.unlink(target_path)
+                unlink(target_path)
                 os.symlink(
                     source_path, target_path, target_is_directory=target_is_directory
                 )
@@ -976,3 +976,19 @@ def symlink(source_path, target_path, recreate=False, target_is_directory=False)
             )
     except Exception:
         pass
+
+
+# -----------------------------------------------------------------------------
+def unlink(path):
+    """
+    Remove symbolic link from path.
+
+    Arguments:
+        path : str
+
+    Returns:
+        None
+    """
+
+    if os.path.islink(path):
+        os.unlink(path)

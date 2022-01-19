@@ -1138,3 +1138,22 @@ def test_recreate_symbolic_link(tmp_path):
     is_link = os.path.islink(os.path.join(source_path, "file_symbolic.txt"))
 
     assert is_link
+
+
+# -----------------------------------------------------------------------------
+def test_remove_symbolic_link(tmp_path):
+    source_path = os.path.join(tmp_path, "source-dir")
+
+    f.set_file_content(os.path.join(source_path, "file.txt"), "test")
+    f.symlink(
+        os.path.join(source_path, "file.txt"),
+        os.path.join(source_path, "file_symbolic.txt"),
+    )
+
+    is_link = os.path.islink(os.path.join(source_path, "file_symbolic.txt"))
+    assert is_link
+
+    f.unlink(os.path.join(source_path, "file_symbolic.txt"))
+
+    is_link = os.path.islink(os.path.join(source_path, "file_symbolic.txt"))
+    assert is_link == False
