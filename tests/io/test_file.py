@@ -1086,3 +1086,74 @@ def test_get_file_line_numbers_with_enclosing_tags_with_more_end_than_start_tags
 
     assert line_numbers[0] == 1
     assert line_numbers[1] == 4
+
+
+# -----------------------------------------------------------------------------
+def test_create_symbolic_link(tmp_path):
+    source_path = os.path.join(tmp_path, "source-dir")
+
+    f.set_file_content(os.path.join(source_path, "file.txt"), "test")
+    f.symlink(
+        os.path.join(source_path, "file.txt"),
+        os.path.join(source_path, "file_symbolic.txt"),
+    )
+
+    is_link = os.path.islink(os.path.join(source_path, "file_symbolic.txt"))
+
+    assert is_link
+
+
+# -----------------------------------------------------------------------------
+def test_create_symbolic_link_with_error(tmp_path):
+    source_path = os.path.join(tmp_path, "source-dir")
+
+    f.set_file_content(os.path.join(source_path, "file.txt"), "test")
+    f.set_file_content(os.path.join(source_path, "file_symbolic.txt"), "test")
+
+    f.symlink(
+        os.path.join(source_path, "file.txt"),
+        os.path.join(source_path, "file_symbolic.txt"),
+    )
+
+    is_link = os.path.islink(os.path.join(source_path, "file_symbolic.txt"))
+
+    assert is_link == False
+
+
+# -----------------------------------------------------------------------------
+def test_recreate_symbolic_link(tmp_path):
+    source_path = os.path.join(tmp_path, "source-dir")
+
+    f.set_file_content(os.path.join(source_path, "file.txt"), "test")
+    f.symlink(
+        os.path.join(source_path, "file.txt"),
+        os.path.join(source_path, "file_symbolic.txt"),
+    )
+    f.symlink(
+        os.path.join(source_path, "file.txt"),
+        os.path.join(source_path, "file_symbolic.txt"),
+        recreate=True,
+    )
+
+    is_link = os.path.islink(os.path.join(source_path, "file_symbolic.txt"))
+
+    assert is_link
+
+
+# -----------------------------------------------------------------------------
+def test_remove_symbolic_link(tmp_path):
+    source_path = os.path.join(tmp_path, "source-dir")
+
+    f.set_file_content(os.path.join(source_path, "file.txt"), "test")
+    f.symlink(
+        os.path.join(source_path, "file.txt"),
+        os.path.join(source_path, "file_symbolic.txt"),
+    )
+
+    is_link = os.path.islink(os.path.join(source_path, "file_symbolic.txt"))
+    assert is_link
+
+    f.unlink(os.path.join(source_path, "file_symbolic.txt"))
+
+    is_link = os.path.islink(os.path.join(source_path, "file_symbolic.txt"))
+    assert is_link == False
