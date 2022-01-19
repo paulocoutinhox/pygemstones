@@ -943,3 +943,36 @@ def get_file_line_numbers_with_enclosing_tags(
         f.close()
 
         return result
+
+
+# -----------------------------------------------------------------------------
+def symlink(source_path, target_path, recreate=False, target_is_directory=False):
+    """
+    Create symbolic link from source path to target path.
+
+    Arguments:
+        source_path : str
+
+        target_path : str
+
+        recreate : bool
+
+        target_is_directory : bool
+
+    Returns:
+        None
+    """
+
+    try:
+        if os.path.islink(target_path):
+            if recreate:
+                os.unlink(target_path)
+                os.symlink(
+                    source_path, target_path, target_is_directory=target_is_directory
+                )
+        else:
+            os.symlink(
+                source_path, target_path, target_is_directory=target_is_directory
+            )
+    except Exception:
+        pass
