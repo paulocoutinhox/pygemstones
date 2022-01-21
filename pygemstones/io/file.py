@@ -40,7 +40,7 @@ def remove_file(path):
 
 
 # -----------------------------------------------------------------------------
-def remove_files(path, pattern, recursive=False):
+def remove_files(path, pattern, recursive=False, follow_links=False):
     """
     Remove files with pattern with all errors and exceptions ignored.
 
@@ -58,7 +58,7 @@ def remove_files(path, pattern, recursive=False):
     """
 
     if recursive:
-        for root, _, files in os.walk(path, topdown=False):
+        for root, _, files in os.walk(path, topdown=False, followlinks=follow_links):
             for name in files:
                 base_path = os.path.join(root, name)
                 filename = os.path.basename(base_path)
@@ -91,7 +91,7 @@ def remove_files(path, pattern, recursive=False):
 
 
 # -----------------------------------------------------------------------------
-def remove_dirs(path, pattern, recursive=False):
+def remove_dirs(path, pattern, recursive=False, follow_links=False):
     """
     Remove directories with pattern with all errors and exceptions ignored.
 
@@ -109,7 +109,7 @@ def remove_dirs(path, pattern, recursive=False):
     """
 
     if recursive:
-        for root, dirs, _ in os.walk(path, topdown=False):
+        for root, dirs, _ in os.walk(path, topdown=False, followlinks=follow_links):
             for name in dirs:
                 base_path = os.path.join(root, name)
                 dirname = os.path.basename(base_path)
@@ -140,7 +140,7 @@ def remove_dirs(path, pattern, recursive=False):
 
 
 # -----------------------------------------------------------------------------
-def find_files(path, pattern, recursive=False):
+def find_files(path, pattern, recursive=False, follow_links=False):
     """
     Find all files which match the pattern.
 
@@ -161,7 +161,9 @@ def find_files(path, pattern, recursive=False):
 
     if dir_exists(path):
         if recursive:
-            for root, _, files in os.walk(path, topdown=False):
+            for root, _, files in os.walk(
+                path, topdown=False, followlinks=follow_links
+            ):
                 for name in files:
                     base_path = os.path.join(root, name)
                     filename = os.path.basename(base_path)
@@ -196,7 +198,7 @@ def find_files(path, pattern, recursive=False):
 
 
 # -----------------------------------------------------------------------------
-def find_dirs(path, pattern, recursive=False):
+def find_dirs(path, pattern, recursive=False, follow_links=False):
     """
     Find all directories which match the pattern.
 
@@ -217,7 +219,7 @@ def find_dirs(path, pattern, recursive=False):
 
     if dir_exists(path):
         if recursive:
-            for root, dirs, _ in os.walk(path, topdown=False):
+            for root, dirs, _ in os.walk(path, topdown=False, followlinks=follow_links):
                 for name in dirs:
                     base_path = os.path.join(root, name)
                     dirname = os.path.basename(base_path)
