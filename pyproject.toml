@@ -3,14 +3,14 @@ description = "Python package that group a lot of classes and functions that hel
 name = "pygemstones"
 version = "0.0.10"
 
-authors = ["Paulo Coutinho <paulo@prsolucoes.com>"]
+authors = ["Paulo Coutinho <paulocoutinhox@gmail.com>"]
 license = "MIT"
 maintainers = []
 readme = "README.md"
 
-documentation = "https://github.com/paulo-coutinho/pygemstones"
-homepage = "https://github.com/paulo-coutinho/pygemstones"
-repository = "https://github.com/paulo-coutinho/pygemstones"
+documentation = "https://github.com/paulocoutinhox/pygemstones"
+homepage = "https://github.com/paulocoutinhox/pygemstones"
+repository = "https://github.com/paulocoutinhox/pygemstones"
 
 keywords = []
 

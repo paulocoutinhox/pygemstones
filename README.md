@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://github.com/paulo-coutinho/pygemstones" target="_blank" rel="noopener noreferrer">
+    <a href="https://github.com/paulocoutinhox/pygemstones" target="_blank" rel="noopener noreferrer">
         <img width="120" src="extras/images/logo.png" alt="PyGemstones Logo">
     </a>
 </p>
@@ -7,8 +7,8 @@
 <h1 align="center">Python Gemstones</h1>
 
 <p align="center">
-  <a href="https://github.com/paulo-coutinho/pygemstones/actions"><img src="https://github.com/paulo-coutinho/pygemstones/actions/workflows/build.yml/badge.svg" alt="Build Status"></a>
-  <a href="https://codecov.io/github/paulo-coutinho/pygemstones?branch=main"><img src="https://img.shields.io/codecov/c/github/paulo-coutinho/pygemstones/main.svg?sanitize=true" alt="Coverage Status"></a>
+  <a href="https://github.com/paulocoutinhox/pygemstones/actions"><img src="https://github.com/paulocoutinhox/pygemstones/actions/workflows/build.yml/badge.svg" alt="Build Status"></a>
+  <a href="https://codecov.io/github/paulocoutinhox/pygemstones?branch=main"><img src="https://img.shields.io/codecov/c/github/paulocoutinhox/pygemstones/main.svg?sanitize=true" alt="Coverage Status"></a>
 </p>
 
 <p align="center">
