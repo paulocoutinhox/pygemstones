@@ -57,3 +57,26 @@ def get_arg_list_value(arg_values, key):
             return item[(len(key) + 1) :]
 
     return None
+
+
+# -----------------------------------------------------------------------------
+def get_arg_list_values(arg_values, key):
+    """
+    Check and return a list of arguments values by key.
+
+    Arguments:
+        arg_values : list
+
+        key : str
+
+    Returns:
+        list
+    """
+
+    values = []
+
+    for item in arg_values:
+        if item and item.startswith("{0}=".format(key)):
+            values.append(item[(len(key) + 1) :])
+
+    return values

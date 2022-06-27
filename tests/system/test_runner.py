@@ -102,3 +102,27 @@ def test_external_with_error_but_silent(tmp_path):
     f.set_file_content(external_file_path, file_content)
 
     r.run_external(external_path, "mod1", "run", [])
+
+
+# -----------------------------------------------------------------------------
+def test_external_with_throw_error(tmp_path):
+    external_path = os.path.join(tmp_path, "external")
+    f.create_dir(external_path)
+
+    external_file_path = os.path.join(external_path, "mod1.py")
+
+    file_content = "def run(args):\n  xyz()\n"
+    f.set_file_content(external_file_path, file_content)
+
+    with pytest.raises(NameError) as info:
+        r.run_external(
+            external_path,
+            "mod1",
+            "run",
+            [],
+            show_error_log=True,
+            show_log=True,
+            throw_error=True,
+        )
+
+    assert info.value.args[0] == "name 'xyz' is not defined"
