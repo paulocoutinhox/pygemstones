@@ -233,3 +233,15 @@ def bold(msg, color=None):
         print("{0}{1}{2}{3}".format(BOLD, color, msg, RESET))
     else:
         print("{0}{1}{2}".format(BOLD, msg, RESET))
+
+
+# -----------------------------------------------------------------------------
+def nl():
+    """
+    Show new line message.
+
+    Returns:
+        None
+    """
+
+    print("")

@@ -36,7 +36,7 @@ jobs:
         run: python3 --version
 
       - name: Display PIP version
-        run: pip3 --version
+        run: python3 -m pip --version
 
       - name: Display Poetry version
         run: poetry --version
