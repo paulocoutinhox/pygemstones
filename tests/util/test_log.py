@@ -150,3 +150,13 @@ def test_bold_with_color(capsys):
 
     captured = capsys.readouterr()
     assert message in captured.out
+
+
+# -----------------------------------------------------------------------------
+def test_new_line(capsys):
+    l.nl()
+    l.nl()
+    l.nl()
+
+    captured = capsys.readouterr()
+    assert "\n\n\n" in captured.out
