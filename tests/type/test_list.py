@@ -25,3 +25,21 @@ def test_get_arg_list_value():
 
     assert l.get_arg_list_value(args, "--version") == "1.2.3"
     assert l.get_arg_list_value(args, "--xyz") == None
+
+
+# -----------------------------------------------------------------------------
+def test_get_arg_list_values():
+    args = ["--param1=myvalue1", "--param1=myvalue2"]
+    values = l.get_arg_list_values(args, "--param1")
+    assert len(values) == 2
+    assert values[0] == "myvalue1"
+    assert values[1] == "myvalue2"
+
+    args = ["--param1=myvalue1", "--param2=myvalue2"]
+    values = l.get_arg_list_values(args, "--param2")
+    assert len(values) == 1
+    assert values[0] == "myvalue2"
+
+    args = ["--param1=myvalue1", "--param2=myvalue2"]
+    values = l.get_arg_list_values(args, "--param3")
+    assert len(values) == 0
