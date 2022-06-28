@@ -87,60 +87,73 @@ def run_external(
 
 
 # -----------------------------------------------------------------------------
-def run(args, cwd=None):
+def run(args, shell=False, cwd=None, env=None, silent=False):
     """
-    Run a command inside an optional directory.
+    Run a command with optional settings inside an optional directory .
 
     Arguments:
         args : list[str]
 
-        cwd : str
-
-    Returns:
-        None
-    """
-
-    ret = subprocess.call(args, cwd=cwd)
-
-    if ret > 0:
-        if not isinstance(args, str):
-            args = " ".join(args)
-
-        log.m(
-            "{2}COMMAND:{3} {0}\n"
-            "{4}WORKING DIR:{5} {1}".format(
-                args, cwd, log.YELLOW, log.RESET, log.YELLOW, log.RESET
-            )
-        )
-
-        log.e("Command execution has failed")
-
-
-# -----------------------------------------------------------------------------
-def run_as_shell(args, cwd=None):
-    """
-    Run a command with shell enabled inside an optional directory.
-
-    Arguments:
-        args : list[str]
+        shell : False
 
         cwd : str
 
+        env : dict
+
+        silent : bool
+
     Returns:
-        None
+        int
     """
 
-    ret = subprocess.call(args, cwd=cwd, shell=True)
-
-    if ret > 0:
-        if not isinstance(args, str):
-            args = " ".join(args)
-
-        log.m(
-            "{2}COMMAND:{3} {0}\n"
-            "{4}WORKING DIR:{5} {1}".format(
-                args, cwd, log.YELLOW, log.RESET, log.YELLOW, log.RESET
-            )
+    if silent:
+        p = subprocess.Popen(
+            args,
+            cwd=cwd,
+            shell=shell,
+            env=env,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
 
-        log.e("Command execution has failed")
+        output = p.communicate()
+
+        if 0 != p.returncode:
+            print(output)
+
+            if not isinstance(args, str):
+                args = " ".join(args)
+
+            log.m(
+                "{2}COMMAND:{3} {0}\n"
+                "{4}WORKING DIR:{5} {1}".format(
+                    args, cwd, log.YELLOW, log.RESET, log.YELLOW, log.RESET
+                )
+            )
+
+            log.e("Command execution has failed")
+
+        return p.returncode
+    else:
+        ret = subprocess.call(
+            args,
+            cwd=cwd,
+            shell=shell,
+            env=env,
+        )
+
+        if ret > 0:
+            if not isinstance(args, str):
+                args = " ".join(args)
+
+            log.m(
+                "{2}COMMAND:{3} {0}\n"
+                "{4}WORKING DIR:{5} {1}".format(
+                    args, cwd, log.YELLOW, log.RESET, log.YELLOW, log.RESET
+                )
+            )
+
+            log.e("Command execution has failed")
+
+        return ret
