@@ -117,10 +117,14 @@ def run(args, shell=False, cwd=None, env=None, silent=False):
             stderr=subprocess.PIPE,
         )
 
-        output = p.communicate()
+        out, err = p.communicate()
 
         if 0 != p.returncode:
-            print(output)
+            if out:
+                print(out.decode("UTF-8"))
+
+            if err:
+                print(err.decode("UTF-8"))
 
             if not isinstance(args, str):
                 args = " ".join(args)

@@ -159,6 +159,21 @@ def test_run_silent_error():
 
 
 # -----------------------------------------------------------------------------
+def test_run_silent_with_error_output(tmp_path, capfd):
+    target_path = os.path.join(tmp_path, "new-dir")
+    target_file_path = os.path.join(target_path, "script.py")
+
+    f.set_file_content(target_file_path, "print('my-output-data')\nraise Exception()")
+
+    assert f.file_exists(target_file_path)
+
+    with pytest.raises(SystemExit) as info:
+        r.run(["python3", target_file_path], silent=True)
+
+    assert info.value.args[0] == 10
+
+
+# -----------------------------------------------------------------------------
 def test_run_silent_error_with_shell():
     with pytest.raises(SystemExit) as info:
         r.run(["xyz-program"], shell=True, silent=True)
