@@ -9,6 +9,9 @@ jobs:
   publish:
     name: Publish
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
