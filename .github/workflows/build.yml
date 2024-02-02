@@ -15,12 +15,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { name: "Linux", os: ubuntu-latest }
+          - { name: "Linux", os: ubuntu-20.04 }
           - { name: "Windows", os: windows-latest }
-          - { name: "macOS", os: macos-latest }
+          - { name: "macOS", os: macos-12 }
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
         exclude:
-          - { config: { os: macos-latest }, python-version: "3.6" }
+          - { config: { os: macos-12 }, python-version: "3.6" }
           - { config: { os: windows-latest }, python-version: "3.6" }
 
     steps:
