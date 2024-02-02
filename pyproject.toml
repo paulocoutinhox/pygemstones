@@ -1,7 +1,7 @@
 [tool.poetry]
 description = "Python package that group a lot of classes and functions that help software development."
 name = "pygemstones"
-version = "0.0.13"
+version = "0.0.14"
 
 authors = ["Paulo Coutinho <paulocoutinhox@gmail.com>"]
 license = "MIT"

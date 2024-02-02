@@ -297,8 +297,9 @@ def create_dir(path):
         None
     """
 
-    if not os.path.isdir(path):
-        os.makedirs(path, exist_ok=True)
+    if path:
+        if not os.path.isdir(path):
+            os.makedirs(path, exist_ok=True)
 
 
 # -----------------------------------------------------------------------------

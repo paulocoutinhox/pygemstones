@@ -1,6 +1,11 @@
 name: Build
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'extras/images/**'
 
 jobs:
   build:
@@ -13,7 +18,7 @@ jobs:
           - { name: "Linux", os: ubuntu-latest }
           - { name: "Windows", os: windows-latest }
           - { name: "macOS", os: macos-latest }
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
         exclude:
           - { config: { os: macos-latest }, python-version: "3.6" }
           - { config: { os: windows-latest }, python-version: "3.6" }

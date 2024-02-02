@@ -26,7 +26,7 @@ Python package that group a lot of classes and functions that help software deve
 To use in your project, install `pygemstones` module:
 
 ```
-pip install pygemstones
+python3 -m pip install pygemstones
 ```
 
 or:
