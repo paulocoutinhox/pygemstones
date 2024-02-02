@@ -1,6 +1,11 @@
 name: Build
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'extras/images/**'
 
 jobs:
   build:
@@ -13,24 +18,23 @@ jobs:
           - { name: "Linux", os: ubuntu-latest }
           - { name: "Windows", os: windows-latest }
           - { name: "macOS", os: macos-latest }
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-        exclude:
-          - { config: { os: macos-latest }, python-version: "3.6" }
-          - { config: { os: windows-latest }, python-version: "3.6" }
-
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v2
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Upgrade PIP
         run: python3 -m pip install --upgrade pip setuptools wheel
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
 
       - name: Display Python version
         run: python3 --version

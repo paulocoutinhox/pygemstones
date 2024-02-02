@@ -9,6 +9,9 @@ jobs:
   autorelease:
     name: Release
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -16,15 +19,15 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
       - name: Upgrade PIP
         run: python3 -m pip install --upgrade pip setuptools wheel
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
 
       - name: Display Python version
         run: python3 --version

@@ -2,7 +2,6 @@ import fnmatch
 import os
 import shutil
 import stat
-from distutils.dir_util import copy_tree
 
 
 # -----------------------------------------------------------------------------
@@ -297,8 +296,9 @@ def create_dir(path):
         None
     """
 
-    if not os.path.isdir(path):
-        os.makedirs(path, exist_ok=True)
+    if path:
+        if not os.path.isdir(path):
+            os.makedirs(path, exist_ok=True)
 
 
 # -----------------------------------------------------------------------------
@@ -428,7 +428,15 @@ def copy_all(src_path, dst_path):
     """
 
     create_dir(dst_path)
-    copy_tree(src_path, dst_path, update=1, preserve_symlinks=True)
+
+    for item in os.listdir(src_path):
+        src_item = os.path.join(src_path, item)
+        dst_item = os.path.join(dst_path, item)
+
+        if os.path.isdir(src_item):
+            shutil.copytree(src_item, dst_item, dirs_exist_ok=True, symlinks=True)
+        else:
+            shutil.copy2(src_item, dst_item)
 
 
 # -----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 [tool.poetry]
 description = "Python package that group a lot of classes and functions that help software development."
 name = "pygemstones"
-version = "0.0.13"
+version = "0.0.14"
 
 authors = ["Paulo Coutinho <paulocoutinhox@gmail.com>"]
 license = "MIT"
@@ -17,12 +17,12 @@ keywords = []
 classifiers = ["Topic :: Software Development :: Libraries :: Python Modules"]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7.0"
 colorama = "^0.4.4"
 boto3 = "^1.20.10"
 
 [tool.poetry.dev-dependencies]
-black = "^21.11b0"
+black = "^22.3.0"
 pytest = "^6.2.5"
 pytest-cov = "^3.0.0"
 isort = "^5.10.1"

@@ -12,6 +12,17 @@ def test_create_dir(tmp_path):
 
 
 # -----------------------------------------------------------------------------
+def test_create_dir_invalid(tmp_path):
+    target_path = ""
+    f.create_dir(target_path)
+
+    target_path = None
+    f.create_dir(target_path)
+
+    assert True
+
+
+# -----------------------------------------------------------------------------
 def test_create_dir_that_already_exists(tmp_path):
     target_path = os.path.join(tmp_path, "new-dir")
 
