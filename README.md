@@ -19,7 +19,7 @@ Python package that group a lot of classes and functions that help software deve
 
 ### Requirements
 
-* Python 3.6+
+* Python 3.7+
 
 ### How To Use
 
@@ -62,7 +62,7 @@ There are several implemented modules for you to use:
 
 These are the requirements for local development:
 
-* Python 3.6+
+* Python 3.7+
 * Poetry (https://python-poetry.org/)
 
 You can install locally:
